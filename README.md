@@ -1,23 +1,23 @@
-Containerized Black Duck Detect - Detecker
+# Detecker - Containerized Black Duck Detect
+Detecker is a way of running Black Duck Detect inside a Docker container, so that it may be executed in a cloud-hosted environment without consuming any client-side resources.
 
-Prerequisites:
-Docker
+# Usage
 
-Usage Instructions:
-First, build the Docker container. To run with the latest Detect,
-docker build -t detecker .
+Build the Docker container
+- To enable scanning with the latest version of Detect,
+```-- docker build -t detecker .```
+- To enable scanning with a different version of Detect,
+```-- docker build --build-arg detect_ver=6.3.0 -t detecker .```
 
-To select a different version of Detect,
-docker build --build-arg detect_ver=6.3.0 -t detecker .
+Once the container is built, you can then run the Docker container
 
-Then, run the Docker container,
-docker run --rm --name "detecker" -it detecker -e --project <Black Duck Project Name> --version <Black Duck Project Version> --key <Black Duck API Key> --source <Git URL containing source code>
-docker run --rm --name "detecker" -it detecker -e -p -v -k --key -s
+You can specify the following arguments:
+- --project or -p [optional] : Black Duck Project Name. If not specified, the script will obtain the project name from the Source Code
+- --version or -v [optional] : Black Duck Version. If not specified, the script will obtain the project version from the Source Code
+- --source or -s : Git URL from where to obtain the Source Code
+- --key or -k : Black Duck API Key. Needs to have both Read and Write permissions
 
---project and --version are optional. If not specified, Detect will obtain these values from the source code
-
-E.g.
+Example
+```sh
 docker run --rm --name "detecker" -it detecker -e --source=https://github.com/OWASP/NodeGoat.git --project=MJ-NodeGoat --key={redacted}
-will run Detect against NodeGoat.git, and scan into MJ-NodeGoat with the project version coming from Github
-
-
+```
