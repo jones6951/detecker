@@ -1,6 +1,9 @@
 FROM ubuntu:16.04
 
-ARG detect_ver=6.4.0
+ARG detect_ver=LATEST
+
+ENV detect_base_url=https://sig-repo.synopsys.com
+
 # Update
 RUN apt-get -qy update
 
@@ -55,7 +58,13 @@ RUN apt-get clean
 COPY run-detect.sh 'source/run-detect.sh'
 RUN chmod +x /source/run-detect.sh
 
-RUN wget --no-verbose -O /source/detect.jar https://sig-repo.synopsys.com/bds-integrations-release/com/synopsys/integration/synopsys-detect/${detect_ver}/synopsys-detect-${detect_ver}.jar
+ENV download_source = 
+
+RUN if [ "$detect_ver" = "LATEST" ] ; then \
+  wget --no-verbose -O /source/detect.jar `curl --silent --header \"X-Result-Detail: info\" ${detect_base_url}/api/storage/bds-integrations-release/com/synopsys/integration/synopsys-detect?properties=DETECT_LATEST | grep \"DETECT_LATEST"" | sed 's/[^[]*[^\"]*\"\([^\"]*\).*/\1/'""` ; \
+else \
+  wget --no-verbose -O /source/detect.jar ${detect_base_url}/bds-integrations-release/com/synopsys/integration/synopsys-detect/${detect_ver}/synopsys-detect-${detect_ver}.jar ; \
+fi
 
 # Define Docker Image entrypoint
 #ENTRYPOINT ["/bin/bash"]
