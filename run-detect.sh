@@ -126,3 +126,6 @@ fi
 
 #bash <(curl -s -L https://detect.synopsys.com/detect.sh) $OPTIONS --detect.source.path=$FOLDER
 java -jar /source/detect.jar $OPTIONS --detect.source.path=$FOLDER
+
+# Clean up
+rm -Rf $FOLDER
