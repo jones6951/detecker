@@ -69,14 +69,14 @@ case $i in
     shift # past argument=value
     ;;
     *)
-          # unknown option
+        # unknown option
     ;;
 esac
 done
 
 if [ -z "$SOURCE" ]
 then
-    echo "No source repository specified."
+    echo "No source specified."
     exit
 fi
 if [ -z "$KEY" ]
@@ -112,8 +112,17 @@ then
 fi
 
 mkdir $FOLDER
-
 git clone $SOURCE $FOLDER
+
+#if [[ $SOURCE == *".git" ]] then
+#    git clone $SOURCE $FOLDER
+#else
+#    FILENAME = "${SOURCE##*/}"
+#    wget --directory-prefix=/source/ $SOURCE
+#    if [[ $FILENAME == *".zip"]] then
+#        unzip $FILENAME $FOLDER
+#    fi
+#fi
 
 # Check if any Python files and install Python if there are
 if fileExists "Pipfile" $FOLDER || fileExists "Pipfile.lock" $FOLDER || fileExists "setup.py" $FOLDER || fileExists "requirements.txt" $FOLDER || fileExists "environment.yml" $FOLDER;
