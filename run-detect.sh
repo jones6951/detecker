@@ -112,19 +112,24 @@ then
 fi
 
 mkdir $FOLDER
-git clone $SOURCE $FOLDER
 
-#if [[ $SOURCE == *".git" ]] then
-#    git clone $SOURCE $FOLDER
-#else
-#    FILENAME = "${SOURCE##*/}"
-#    wget --directory-prefix=/source/ $SOURCE
-#    if [[ $FILENAME == *".zip"]] then
-#        unzip $FILENAME $FOLDER
-#    fi
-#fi
-#
-
+if [[ $SOURCE == *.git ]]
+then
+    git clone $SOURCE $FOLDER
+else
+    FILENAME="${SOURCE##*/}"
+    wget --directory-prefix=/source/ -q $SOURCE > /dev/null
+    if [[ $? -ne 0 ]]; then
+        echo "Error"
+        exit
+    else
+        if [[ $FILENAME == *.zip ]]
+        then
+            unzip /source/$FILENAME -d $FOLDER > /dev/null
+            rm /source/$FILENAME
+        fi
+    fi
+fi
 
 # Check if any Python files and install Python if there are
 if fileExists "Pipfile" $FOLDER || fileExists "Pipfile.lock" $FOLDER || fileExists "setup.py" $FOLDER || fileExists "requirements.txt" $FOLDER || fileExists "environment.yml" $FOLDER;
