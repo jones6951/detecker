@@ -23,11 +23,12 @@ You can specify the following arguments:
 
 Example 1: To scan a project directly from Github
 ```sh
-docker run --rm --name "detecker" -it detecker -e --source=https://github.com/OWASP/NodeGoat.git \ --project=MJ-NodeGoat --key={redacted}
+docker run --rm --name "detecker" -it detecker -e --source=https://github.com/OWASP/NodeGoat.git
+--project=MJ-NodeGoat --key={redacted}
 ```
 
 Example 2: To scan a project from a URL
 ```sh
-docker run --rm --name "detecker" -it detecker -e --source=https://curl.haxx.se/download/curl-7.72.0.zip \
+docker run --rm --name "detecker" -it detecker -e --source=https://curl.haxx.se/download/curl-7.72.0.zip
 --project=MJ-Curl --version=7.72 --key={redacted}
 ```
