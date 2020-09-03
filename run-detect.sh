@@ -68,6 +68,18 @@ case $i in
     SOURCE="${i#*=}"
     shift # past argument=value
     ;;
+    -b=*|--build=*)
+    BUILD="${i#*=}"
+    shift # past argument=value
+    ;;
+    -c=*|--config=*)
+    CONFIG="${i#*=}"
+    shift # past argument=value
+    ;;
+    -e=*|--extra=*)
+    EXTRA="${i#*=}"
+    shift # past argument=value
+    ;;
     *)
         # unknown option
     ;;
@@ -101,6 +113,11 @@ then
     VERSION="DEFAULT"
 else
     OPTIONS="${OPTIONS} --detect.project.version.name=${VERSION}"
+fi
+
+# Handle Extra Black Duck options
+if [ -n "$EXTRA" ]; then
+    OPTIONS="{OPTIONS} $EXTRA"
 fi
 
 FOLDER="/source/${PROJECT}-${VERSION}"
@@ -140,7 +157,18 @@ if fileExists "NuGet.Config" $FOLDER
 then installNuget;
 fi
 
+cd $FOLDER
+
+if [ -n "$CONFIG" ]; then
+    eval "$CONFIG"
+fi
+
+if [ -n "$BUILD" ]; then
+    eval "$BUILD"
+fi
+
 #bash <(curl -s -L https://detect.synopsys.com/detect.sh) $OPTIONS --detect.source.path=$FOLDER
+
 java -jar /source/detect.jar $OPTIONS --detect.source.path=$FOLDER
 
 # Clean up
