@@ -88,13 +88,13 @@ done
 
 if [ -z "$SOURCE" ]
 then
-    echo "No source specified."
-    exit
+    echo "No source parameter specified."
+    exit 1
 fi
 if [ -z "$KEY" ]
 then
     echo "No API Key specified."
-    exit
+    exit 1
 fi
 
 OPTIONS="--blackduck.api.token=$KEY --blackduck.url=$URL"
@@ -133,12 +133,16 @@ mkdir $FOLDER
 if [[ $SOURCE == *.git ]]
 then
     git clone $SOURCE $FOLDER
+    if [[ $? -ne 0 ]]; then
+        echo "Error cloning $SOURCE"
+        exit 2
+    fi
 else
     FILENAME="${SOURCE##*/}"
     wget --directory-prefix=/source/ -q $SOURCE > /dev/null
     if [[ $? -ne 0 ]]; then
-        echo "Error"
-        exit
+        echo "Error downloading file $SOURCE"
+        exit 2
     else
         if [[ $FILENAME == *.zip ]]
         then
@@ -170,6 +174,9 @@ fi
 #bash <(curl -s -L https://detect.synopsys.com/detect.sh) $OPTIONS --detect.source.path=$FOLDER
 
 java -jar /source/detect.jar $OPTIONS --detect.source.path=$FOLDER
+STATUS = $?
 
 # Clean up
 rm -Rf $FOLDER
+
+exit $STATUS
