@@ -17,7 +17,7 @@ Build the Docker container
 Once the container is built, you can then run the Docker container
 
 You can specify the following arguments:
-- --source or -s : Git URL from where to obtain the Source Code or the URL where the file to scan is located
+- --source or -s : Git URL from where to obtain the Source Code or the URL where the file to scan is located. Alternatively, you can specify --source=LOCAL to enable local file-system scanning, in which case you must also mount a volume with the parameter -v /path/to/your/code:/source 
 - --key or -k : Black Duck API Key. The key needs to have both Read and Write permissions in Black Duck
 - --project or -p [optional]: Black Duck Project Name. If not specified, the script will obtain the project name from the Source Code
 - --version or -v [optional] : Black Duck Version. If not specified, the script will obtain the project version from the Source Code
@@ -36,4 +36,12 @@ docker run --rm --name "detecker" -it detecker -e --source=https://github.com/OW
 docker run --rm --name "detecker" -it detecker -e \
 --source=https://curl.haxx.se/download/curl-7.72.0.zip \
 --project=MJ-Curl --version=7.72 --key={redacted}
+```
+
+#### Example 3: To scan a local folder
+```sh
+docker run --rm --name "detecker" -it detecker -e \
+--source=LOCAL \
+--project=MJ-Roller --version=7.72 --key={redacted}
+-v /Users/martin/Development/roller:/source
 ```

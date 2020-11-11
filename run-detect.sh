@@ -120,34 +120,39 @@ if [ -n "$EXTRA" ]; then
     OPTIONS="{OPTIONS} $EXTRA"
 fi
 
-FOLDER="/source/${PROJECT}-${VERSION}"
-
-# Delete source folder if it already exists
-if [[ -d $FOLDER ]]
+if [[ $SOURCE == "LOCAL" ]]
 then
-    rm -Rf $FOLDER
-fi
-
-mkdir $FOLDER
-
-if [[ $SOURCE == *.git ]]
-then
-    git clone $SOURCE $FOLDER
-    if [[ $? -ne 0 ]]; then
-        echo "Error cloning $SOURCE"
-        exit 2
-    fi
+    FOLDER="/local"
 else
-    FILENAME="${SOURCE##*/}"
-    wget --directory-prefix=/source/ -q $SOURCE > /dev/null
-    if [[ $? -ne 0 ]]; then
-        echo "Error downloading file $SOURCE"
-        exit 2
+    FOLDER="/source/${PROJECT}-${VERSION}"
+
+    # Delete source folder if it already exists
+    if [[ -d $FOLDER ]]
+    then
+        rm -Rf $FOLDER
+    fi
+
+    mkdir $FOLDER
+
+    if [[ $SOURCE == *.git ]]
+    then
+        git clone $SOURCE $FOLDER
+        if [[ $? -ne 0 ]]; then
+            echo "Error cloning $SOURCE"
+            exit 2
+        fi
     else
-        if [[ $FILENAME == *.zip ]]
-        then
-            unzip /source/$FILENAME -d $FOLDER > /dev/null
-            rm /source/$FILENAME
+        FILENAME="${SOURCE##*/}"
+        wget --directory-prefix=/source/ -q $SOURCE > /dev/null
+        if [[ $? -ne 0 ]]; then
+            echo "Error downloading file $SOURCE"
+            exit 2
+        else
+            if [[ $FILENAME == *.zip ]]
+            then
+                unzip /source/$FILENAME -d $FOLDER > /dev/null
+                rm /source/$FILENAME
+            fi
         fi
     fi
 fi
@@ -177,6 +182,9 @@ java -jar /source/detect.jar $OPTIONS --detect.source.path=$FOLDER
 STATUS=$?
 
 # Clean up
-rm -Rf $FOLDER
+if [[ $SOURCE != "LOCAL" ]]
+then
+    rm -Rf $FOLDER
+fi
 
 exit $STATUS
