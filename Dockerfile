@@ -13,7 +13,7 @@ RUN apt-get install -y apt-utils
 RUN apt-get install -y curl unzip wget git
 
 # Golang
-RUN apt-get -y install less gdb golang-1.10
+RUN apt-get -y install less gdb
 
 ENV PATH=/usr/lib/go-1.10/bin:$PATH
 
