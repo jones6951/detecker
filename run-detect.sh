@@ -122,7 +122,7 @@ fi
 
 if [[ $SOURCE == "LOCAL" ]]
 then
-    FOLDER="/local"
+    FOLDER="/source"
 else
     FOLDER="/source/${PROJECT}-${VERSION}"
 
@@ -178,7 +178,7 @@ fi
 
 #bash <(curl -s -L https://detect.synopsys.com/detect.sh) $OPTIONS --detect.source.path=$FOLDER
 
-java -jar /source/detect.jar $OPTIONS --detect.source.path=$FOLDER
+java -jar /tools/detect.jar $OPTIONS --detect.source.path=$FOLDER
 STATUS=$?
 
 # Clean up

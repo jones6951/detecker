@@ -13,8 +13,7 @@ RUN apt-get install -y apt-utils
 RUN apt-get install -y curl unzip wget git
 
 # Golang
-RUN \
-    apt-get -y install less gdb golang-1.10
+RUN apt-get -y install less gdb golang-1.10
 
 ENV PATH=/usr/lib/go-1.10/bin:$PATH
 
@@ -56,17 +55,18 @@ RUN apt-get install -qy perl cpanminus \
 # remove download archive files
 RUN apt-get clean
 
-COPY run-detect.sh 'source/run-detect.sh'
-RUN chmod +x /source/run-detect.sh
+RUN mkdir /tools
+COPY run-detect.sh '/tools/run-detect.sh'
+RUN chmod +x /tools/run-detect.sh
 
 ENV download_source = 
 
 RUN if [ "$detect_ver" = "LATEST" ] ; then \
-  wget --no-verbose -O /source/detect.jar `curl --silent --header \"X-Result-Detail: info\" ${detect_base_url}/api/storage/bds-integrations-release/com/synopsys/integration/synopsys-detect?properties=DETECT_LATEST | grep \"DETECT_LATEST"" | sed 's/[^[]*[^\"]*\"\([^\"]*\).*/\1/'""` ; \
+  wget --no-verbose -O /tools/detect.jar `curl --silent --header \"X-Result-Detail: info\" ${detect_base_url}/api/storage/bds-integrations-release/com/synopsys/integration/synopsys-detect?properties=DETECT_LATEST | grep \"DETECT_LATEST"" | sed 's/[^[]*[^\"]*\"\([^\"]*\).*/\1/'""` ; \
 else \
-  wget --no-verbose -O /source/detect.jar ${detect_base_url}/bds-integrations-release/com/synopsys/integration/synopsys-detect/${detect_ver}/synopsys-detect-${detect_ver}.jar ; \
+  wget --no-verbose -O /tools/detect.jar ${detect_base_url}/bds-integrations-release/com/synopsys/integration/synopsys-detect/${detect_ver}/synopsys-detect-${detect_ver}.jar ; \
 fi
 
 # Define Docker Image entrypoint
 #ENTRYPOINT ["/bin/bash"]
-ENTRYPOINT ["/source/run-detect.sh"]
+ENTRYPOINT ["/tools/run-detect.sh"]
