@@ -9,6 +9,12 @@ function fileExists() {
     fi
 }
 
+function installGo() {
+    echo "Installing Go Handler"
+    apt-get update -y && \
+    apt-get install -y golang
+}
+
 function installNuget() {
     echo "Installing Nuget Handler"
     apt-get update -y && \
@@ -169,6 +175,10 @@ fi
 
 if fileExists "NuGet.Config" $FOLDER
 then installNuget;
+fi
+
+if fileExists "Gopkg.lock" $FOLDER || fileExists "gogradle.lock" $FOLDER || fileExists "go.mod" $FOLDER || fileExists "vendor.conf" $FOLDER;
+then installGo;
 fi
 
 cd $FOLDER
