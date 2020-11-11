@@ -1,5 +1,5 @@
 # Detecker - Containerized Black Duck Detect
-Detecker (a combination of Detect and Docker) is a way of running Black Duck Detect inside a Docker container, so that it may be executed in a cloud-hosted environment without consuming any client-side resources.
+Detecker (a combination of **Dete**ct and Do**cker**) is a way of running Black Duck Detect inside a Docker container, so that it may be executed in a cloud-hosted environment without consuming any client-side resources.
 
 When you build the Docker container, the script will download all of the requisite dependencies for Detect to successfully capture the open source within the codebase to be scanned.
 
