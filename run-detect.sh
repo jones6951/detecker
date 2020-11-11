@@ -86,12 +86,12 @@ case $i in
 esac
 done
 
-if [ -z "$SOURCE" ]
+if [[ -z "$SOURCE" ]]
 then
     echo "No source parameter specified."
     exit 1
 fi
-if [ -z "$KEY" ]
+if [[ -z "$KEY" ]]
 then
     echo "No API Key specified."
     exit 1
@@ -99,7 +99,7 @@ fi
 
 OPTIONS="--blackduck.api.token=$KEY --blackduck.url=$URL"
 
-if [ -z "$PROJECT" ]
+if [[ -z "$PROJECT" ]]
 then
 #   Project not specified, so use the default
     PROJECT="DEFAULT"
@@ -107,7 +107,7 @@ else
     OPTIONS="${OPTIONS} --detect.project.name=${PROJECT}"
 fi
 
-if [ -z "$VERSION" ]
+if [[ -z "$VERSION" ]]
 then
 #   Version not specified, so use the default
     VERSION="DEFAULT"
@@ -115,9 +115,14 @@ else
     OPTIONS="${OPTIONS} --detect.project.version.name=${VERSION}"
 fi
 
+echo "Extra is ${EXTRA}"
+echo $EXTRA
+echo "Options is ${OPTIONS}"
+
 # Handle Extra Black Duck options
-if [ -n "$EXTRA" ]; then
-    OPTIONS="{OPTIONS} $EXTRA"
+if [[ ! -z "$EXTRA" ]]
+then
+    OPTIONS="${OPTIONS} ${EXTRA}"
 fi
 
 if [[ $SOURCE == "LOCAL" ]]
@@ -177,7 +182,6 @@ if [ -n "$BUILD" ]; then
 fi
 
 #bash <(curl -s -L https://detect.synopsys.com/detect.sh) $OPTIONS --detect.source.path=$FOLDER
-
 java -jar /tools/detect.jar $OPTIONS --detect.source.path=$FOLDER
 STATUS=$?
 
