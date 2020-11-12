@@ -12,7 +12,12 @@ function fileExists() {
 function installGo() {
     echo "Installing Go Handler"
     apt-get update -y && \
-    apt-get install -y golang
+    wget https://dl.google.com/go/go1.15.2.linux-amd64.tar.gz -O go1.15.2.linux-amd64.tar.gz && \
+    tar -xf go1.15.2.linux-amd64.tar.gz && \
+    mv /go /usr/local && \
+    rm /go1.15.2.linux-amd64.tar.gz && \
+    export PATH=$PATH:/usr/local/go/bin && \
+    export GOROOT=/usr/local/go
 }
 
 function installNuget() {
@@ -120,10 +125,6 @@ then
 else
     OPTIONS="${OPTIONS} --detect.project.version.name=${VERSION}"
 fi
-
-echo "Extra is ${EXTRA}"
-echo $EXTRA
-echo "Options is ${OPTIONS}"
 
 # Handle Extra Black Duck options
 if [[ ! -z "$EXTRA" ]]
