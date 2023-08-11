@@ -5,6 +5,7 @@ When you build the Docker container, the script will download all of the requisi
 
 When you run the container, the source will be downloaded and additional components if required (e.g. Python or Nuget). The script will then run Detect against this downloaded source and upload the results to your Black Duck server.
 
+
 ## Usage
 ### Step 1
 Build the Docker container
